@@ -8,16 +8,16 @@ type Header struct {
 	PrevHash   string
 	Timestamp  int64
 	Difficulty uint
-	Nonce      uint
+	Nonce      int
 }
 
 type Block struct {
 	Header *Header
 	Hash   string
-	Data   interface{}
+	Data   string
 }
 
-func newBlock(prevHash string, nonce uint, data interface{}, proof string) *Block {
+func newBlock(prevHash string, nonce int, data string, proof string) *Block {
 	return &Block{
 		Header: &Header{
 			PrevHash:   prevHash,

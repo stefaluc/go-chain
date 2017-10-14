@@ -1,11 +1,14 @@
 package main
 
 import (
-//"crypto/sha256"
+	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
+	"strconv"
 )
 
 const (
-	MiningDifficulty = 2
+	MiningDifficulty = 4
 )
 
 type Blockchain struct {
@@ -13,10 +16,10 @@ type Blockchain struct {
 }
 
 func newBlockChain() *Blockchain {
-	// create genesis block
+	// create and mine genesis block
 	prevHash := "0000000000000000000000000000000000000000000000000000000000000000"
 	blockData := "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks."
-	proof, nonce = mine(blockData)
+	proof, nonce := mine(blockData)
 	genesisBlock := newBlock(prevHash, nonce, blockData, proof)
 
 	return &Blockchain{
@@ -24,10 +27,24 @@ func newBlockChain() *Blockchain {
 	}
 }
 
-func mine(data interface{}) (string, uint) {
+func mine(data string) (string, int) {
+	nonce := 0
+	for {
+		// convert nonce and data to byte arrays, append, and compute hashes
+		h := sha256.New()
+		nonceBytes := []byte(strconv.Itoa(nonce))
+		h.Write(append([]byte(data), nonceBytes...))
+		hash := hex.EncodeToString(h.Sum(nil))
 
-}
+		var difficulty bytes.Buffer
+		for i := 0; i < MiningDifficulty; i++ {
+			difficulty.WriteString("0")
+		}
+		// check if valid hash (ie number of zeroes at beginning of hash equals MiningDifficulty)
+		if hash[0:MiningDifficulty] == difficulty.String() {
+			return hash, nonce
+		}
 
-func isValidProof(proof string) bool {
-
+		nonce = nonce + 1
+	}
 }

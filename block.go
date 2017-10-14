@@ -1,35 +1,31 @@
 package main
 
 import (
-	"encoding/json"
 	"time"
 )
 
 type Header struct {
-	PrevHash int
-	Timestamp int64
+	PrevHash   string
+	Timestamp  int64
 	Difficulty uint
-	Nonce uint
-	// version
-	// merkleRoot
+	Nonce      uint
 }
 
 type Block struct {
-	// size uint
 	Header *Header
-	Hash string
-	Data interface{}
+	Hash   string
+	Data   interface{}
 }
 
-func newBlock() *Block {
-	return &Block {
+func newBlock(prevHash string, nonce uint, data interface{}, proof string) *Block {
+	return &Block{
 		Header: &Header{
-			PrevHash: nil,
-			Timestamp: time.Now().Unix(),
-			Difficulty: nil,
-			Nonce: nil,
+			PrevHash:   prevHash,
+			Timestamp:  time.Now().Unix(),
+			Difficulty: MiningDifficulty,
+			Nonce:      nonce,
 		},
-		Hash: nil,
-		Data: []byte(""),
+		Hash: proof,
+		Data: data,
 	}
 }
